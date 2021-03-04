@@ -1,8 +1,23 @@
 const express = require('express')
+const MongoClient = require('mongodb').MongoClient
+const ObjectId = require('mongodb').ObjectId
 const app = express()
 
 app.use(express.json())
 let book =[]
+
+app.use(express.json())
+
+const url = 'mongodb+srv://superadmin:nnkea7n3@cluster0.vpash.mongodb.net/book_information?retryWrites=true&w=majority'
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true })
+let db, moviesCollection
+
+async function connect(){
+    await client.connect()
+    db = client.db('book_information')
+    moviesCollection = db.collection('books')
+}
+connect()
 
 app.get('/books/:id', (req, res) => { 
     //input
@@ -20,7 +35,7 @@ app.post('/books', (req, res) => {
     let newunit =req.body.unit
     let newisbn =req.body.isbn
     let newimageUrl =req.body.imageUrl
-    
+
     //Key: value
     let newBooks ={
         title: newtitle,
@@ -33,9 +48,9 @@ app.post('/books', (req, res) => {
     let bookID = 0
 
     //process
-    book.push(newBooks)
+    const result = await moviesCollection.insertOne(newBooks)
     //n-1
-    bookID = book.length -1
+    bookID = result.insertedId
 
     //output 
     res.status(201).json(bookID)
