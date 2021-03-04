@@ -4,6 +4,15 @@ const app = express()
 app.use(express.json())
 let book =[]
 
+app.get('/books/:id', (req, res) => { 
+    //input
+
+    //process
+
+    //output 
+    res.status(200).json(book)
+})
+
 app.post('/books', (req, res) => {
     //input
     let newtitle = req.body.title
