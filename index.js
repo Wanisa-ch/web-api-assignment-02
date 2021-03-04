@@ -19,13 +19,28 @@ async function connect(){
 }
 connect()
 
-app.get('/books/:id', (req, res) => { 
+app.get('/books', async (req, res) => {
     //input
 
     //process
+    const cursor = await bookscollection.find({})
+    const result = await cursor.toArray()
 
-    //output 
+    //output
+    res.status(200).json(result)
+})
+
+
+app.get('/books/:id', async (req, res) =>{
+    //input*
+    let id = req.params.id
+
+    //process*
+    const book = await bookscollection.findOne({ _id: ObjectId(id)})
+
+    //output*
     res.status(200).json(book)
+
 })
 
 app.post('/books', (req, res) => {
